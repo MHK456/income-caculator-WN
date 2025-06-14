@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebNovel Income Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary: rgb(196, 10, 10);
+      --bg: rgb(147, 25, 25);
+      --card: #fff;
+      --text: #222;
+      --shadow: rgba(20, 1, 56, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, rgb(40, 48, 96), #fff);
+      padding: 1.5rem;
+      margin: 0;
+      color: var(--text);
+    }
+
+    header h1 {
+      text-align: center;
+      color: var(--primary);
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      animation: fadeDown 1s ease-out;
+    }
+
+    form {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 0 14px var(--shadow);
+      animation: fadeIn 1.2s ease-in;
+    }
+
+    label {
+      font-weight: 600;
+      margin-top: 1rem;
+      display: block;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      background-color: var(--primary);
+      color: white;
+      padding: 0.9rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: rgb(32, 29, 183);
+    }
+
+    .result {
+      background: #fff;
+      margin: 2rem auto;
+      max-width: 600px;
+      padding: 1.5rem;
+      border-left: 5px solid #28a745;
+      border-radius: 12px;
+      box-shadow: 0 0 10px var(--shadow);
+      animation: fadeUp 1s ease-out;
+    }
+
+    .result h2 {
+      color: #28a745;
+      margin-bottom: 1rem;
+      animation: pulse 1s infinite alternate;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .list-group-item {
+      padding: 0.8rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .bg-light {
+      background: rgb(166, 182, 231);
+      font-weight: bold;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.02); }
+    }
+
+    @media (max-width: 480px) {
+      form, .result {
+        padding: 1rem;
+      }
+
+      input, select, button {
+        font-size: 0.95rem;
+        padding: 0.6rem;
+      }
+
+      .list-group-item {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>WebNovel Income Calculator</h1>
+  </header>
+
+  <main>
+    <form id="incomeForm">
+      <label>Average Word Count:</label>
+      <input type="number" id="word_count" required min="1000" max="2800">
+
+      <label>Total Subscriptions:</label>
+      <input type="number" id="subscribers" required>
+
+      <label>Total Privilege Coins:</label>
+      <input type="number" id="privilege_coins" required>
+
+      <label>MGS Bonus Achieved?</label>
+      <select id="mgs">
+        <option value="">No</option>
+        <option value="yes">Yes</option>
+      </select>
+
+      <label>Win Win Tier:</label>
+      <select id="winwin">
+        <option value="">None</option>
+        <option value="tier1">Tier 1 ($50)</option>
+        <option value="tier2">Tier 2 ($200)</option>
+        <option value="tier3">Tier 3 ($400)</option>
+      </select>
+
+      <button type="submit">Calculate</button>
+    </form>
+
+    <div id="result" class="result" style="display:none">
+      <h2>📊 Estimated Income: $<span id="totalIncome"></span></h2>
+      <p><em>(Estimated only — may vary 5–20%)</em></p>
+      <ul>
+        <li class="list-group-item"><strong>✍️ Word Count:</strong> <span id="wc"></span></li>
+        <li class="list-group-item"><strong>👥 Subscriptions:</strong> <span id="subs"></span></li>
+        <li class="list-group-item"><strong>💰 Final Sub Income:</strong> $<span id="subIncome"></span></li>
+        <li class="list-group-item"><strong>💎 Privilege Coin Income:</strong> $<span id="privIncome"></span></li>
+        <li class="list-group-item"><strong>✅ MGS Bonus:</strong> $<span id="mgsBonus"></span></li>
+        <li class="list-group-item"><strong>🏆 Win Win Bonus:</strong> $<span id="winwinBonus"></span></li>
+        <li class="list-group-item bg-light"><strong>📈 Total Estimated Income:</strong> $<span id="totalIncome2"></span></strong></li>
+      </ul>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById("incomeForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const wc = +document.getElementById("word_count").value;
+      const subs = +document.getElementById("subscribers").value;
+      const priv = +document.getElementById("privilege_coins").value;
+      const mgs = document.getElementById("mgs").value === 'yes';
+      const winwin = document.getElementById("winwin").value;
+
+      let coinPrice = 20, coinValue = 0.004286;
+      if (wc <= 1200) { coinPrice = 10; coinValue = 0.005000; }
+      else if (wc <= 1400) { coinPrice = 12; coinValue = 0.005000; }
+      else if (wc <= 1600) { coinPrice = 13; coinValue = 0.004615; }
+      else if (wc <= 1800) { coinPrice = 15; coinValue = 0.004444; }
+      else if (wc <= 2000) { coinPrice = 16; coinValue = 0.004687; }
+      else if (wc <= 2200) { coinPrice = 18; coinValue = 0.004762; }
+
+      let rawSub = coinPrice * coinValue * subs;
+      let finalSub = rawSub > 200 ? rawSub : rawSub * 0.9;
+      let privIncome = priv * 0.008;
+
+      let winwinIncome = 0;
+      if (winwin === 'tier1') winwinIncome = 50;
+      else if (winwin === 'tier2') winwinIncome = 200;
+      else if (winwin === 'tier3') winwinIncome = 400;
+
+      let mgsIncome = 0;
+      if (mgs) {
+        if (finalSub > 60 && finalSub <= 200) {
+          total = 200 + winwinIncome;
+        } else {
+          mgsIncome = 200;
+        }
+      }
+
+      const total = finalSub + privIncome + mgsIncome + winwinIncome;
+
+      document.getElementById("wc").textContent = wc;
+      document.getElementById("subs").textContent = subs;
+      document.getElementById("subIncome").textContent = finalSub.toFixed(2);
+      document.getElementById("privIncome").textContent = privIncome.toFixed(2);
+      document.getElementById("mgsBonus").textContent = mgsIncome.toFixed(2);
+      document.getElementById("winwinBonus").textContent = winwinIncome.toFixed(2);
+      document.getElementById("totalIncome").textContent = total.toFixed(2);
+      document.getElementById("totalIncome2").textContent = total.toFixed(2);
+
+      document.getElementById("result").style.display = "block";
+    });
+  </script>
+</body>
+</html>
