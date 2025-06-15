@@ -160,12 +160,13 @@
 
     let mgsIncome = 0;
     const partialTotal = finalSub + privilegeIncome + giftIncome;
+
     if (mgs === 'yes') {
-      if (partialTotal > 60 && partialTotal <= 200) {
-        return [200 + winWinIncome, finalSub, privilegeIncome, 0, winWinIncome, giftIncome];
-      } else {
+      if (partialTotal >= 200) {
         mgsIncome = 200;
-      }
+      } else if (partialTotal >= 60 && partialTotal < 200) {
+        return [200 + winWinIncome, finalSub, privilegeIncome, 0, winWinIncome, giftIncome];
+      } // else mgsIncome stays 0 if < 60
     }
 
     const total = partialTotal + mgsIncome + winWinIncome;
