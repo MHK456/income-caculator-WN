@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebNovel Income Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --primary: rgb(196, 10, 10);
+      --bg: rgb(147, 25, 25);
+      --card: #fff;
+      --text: #222;
+      --shadow: rgba(20, 1, 56, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, rgb(40, 48, 96), #fff);
+      padding: 1.5rem;
+      margin: 0;
+      color: var(--text);
+    }
+    header h1 {
+      text-align: center;
+      color: var(--primary);
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      animation: fadeDown 0.8s ease-out;
+    }
+    form {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 0 14px var(--shadow);
+      animation: fadeIn 1s ease-in;
+    }
+    label { font-weight: 600; margin-top: 1rem; display: block; }
+    input, select {
+      width: 100%; padding: 0.7rem; margin-top: 5px;
+      border: 1px solid #ccc; border-radius: 8px; font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    input:focus, select:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 5px rgba(196, 10, 10, 0.5);
+    }
+    button {
+      margin-top: 1.5rem; width: 100%; background-color: var(--primary);
+      color: white; padding: 0.9rem; font-size: 1rem;
+      border: none; border-radius: 8px; cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.3s;
+    }
+    button:hover { background-color: rgb(32, 29, 183); transform: scale(1.03); }
+    .result {
+      background: #fff; margin: 2rem auto; max-width: 600px; padding: 1.5rem;
+      border-left: 5px solid #28a745; border-radius: 12px;
+      box-shadow: 0 0 10px var(--shadow); animation: slideUp 0.6s ease-out;
+    }
+    .result h2 {
+      color: #28a745; margin-bottom: 1rem;
+      animation: pulse 1.2s infinite alternate ease-in-out;
+    }
+    ul { list-style: none; padding-left: 0; }
+    .list-group-item { padding: 0.8rem; border-bottom: 1px solid #eee; }
+    .bg-light { background: rgb(166, 182, 231); font-weight: bold; }
+    @media (max-width: 480px) {
+      form, .result { padding: 1rem; }
+      input, select, button { font-size: 0.95rem; padding: 0.6rem; }
+      .list-group-item { font-size: 0.95rem; }
+    }
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
+  </style>
+</head>
+<body>
+<header><h1>WebNovel Income Calculator</h1></header>
+<main>
+  <form id="incomeForm">
+    <label>Average Word Count:</label>
+    <input type="number" id="word_count" required min="1000" max="2800">
+
+    <label>Total Subscriptions:</label>
+    <input type="number" id="subscribers" required min="0">
+
+    <label>Total Privilege Coins:</label>
+    <input type="number" id="privilege_coins" required min="0">
+
+    <label>Gift Received (in coins):</label>
+    <input type="number" id="gift_coins" required min="0">
+
+    <label>MGS Bonus Achieved?</label>
+    <select id="mgs">
+      <option value="no">No</option>
+      <option value="yes">Yes</option>
+    </select>
+
+    <label>Win Win Tier:</label>
+    <select id="winwin">
+      <option value="">None</option>
+      <option value="tier1">Tier 1 ($50)</option>
+      <option value="tier2">Tier 2 ($200)</option>
+      <option value="tier3">Tier 3 ($400)</option>
+    </select>
+
+    <button type="submit">Calculate</button>
+  </form>
+
+  <div class="result" id="result" style="display: none;">
+    <h2>📊 Estimated Income: <span id="total_income"></span></h2>
+    <p><em>(Estimated only — may vary 5–20%)</em></p>
+    <ul>
+      <li class="list-group-item"><strong>✍️ Word Count:</strong> <span id="res_word_count"></span></li>
+      <li class="list-group-item"><strong>👥 Subscriptions:</strong> <span id="res_subscribers"></span></li>
+      <li class="list-group-item"><strong>💰 Final Sub Income:</strong> $<span id="res_final_sub"></span></li>
+      <li class="list-group-item"><strong>💎 Privilege Coin Income:</strong> $<span id="res_privilege_income"></span></li>
+      <li class="list-group-item"><strong>🎁 Gift Income:</strong> $<span id="res_gift"></span></li>
+      <li class="list-group-item"><strong>✅ MGS Bonus:</strong> $<span id="res_mgs"></span></li>
+      <li class="list-group-item"><strong>🏆 Win Win Bonus:</strong> $<span id="res_winwin"></span></li>
+      <li class="list-group-item bg-light"><strong>📈 Total Estimated Income:</strong> $<span id="res_total"></span></li>
+    </ul>
+  </div>
+</main>
+<script>
+  function calculateIncome(wordCount, subscribers, privilegeCoins, giftCoins, mgs, winwinTier) {
+    let coinPrice, coinValue;
+    if (wordCount >= 1000 && wordCount <= 1200) {
+      coinPrice = 10; coinValue = 0.005100;
+    } else if (wordCount <= 1400) {
+      coinPrice = 12; coinValue = 0.005100;
+    } else if (wordCount <= 1600) {
+      coinPrice = 13; coinValue = 0.004715;
+    } else if (wordCount <= 1800) {
+      coinPrice = 15; coinValue = 0.004544;
+    } else if (wordCount <= 2000) {
+      coinPrice = 16; coinValue = 0.0047875;
+    } else if (wordCount <= 2200) {
+      coinPrice = 18; coinValue = 0.004862;
+    } else if (wordCount <= 2400) {
+      coinPrice = 20; coinValue = 0.0043457;
+    } else if (wordCount <= 2600) {
+      coinPrice = 21; coinValue = 0.00414163;
+    } else {
+      coinPrice = 23; coinValue = 0.004447826;
+    }
+
+    const rawSub = coinPrice * coinValue * subscribers;
+    const finalSub = rawSub > 200 ? rawSub : rawSub * 0.9;
+    const privilegeIncome = privilegeCoins * 0.004936;
+    const giftIncome = giftCoins * 0.004736;
+
+    let winWinIncome = 0;
+    if (winwinTier === 'tier1') winWinIncome = 50;
+    else if (winwinTier === 'tier2') winWinIncome = 200;
+    else if (winwinTier === 'tier3') winWinIncome = 400;
+
+    let mgsIncome = 0;
+    const partialTotal = finalSub + privilegeIncome + giftIncome;
+
+    if (mgs === 'yes') {
+      if (partialTotal >= 200) {
+        mgsIncome = 200;
+      } else if (partialTotal >= 60 && partialTotal < 200) {
+        return [200 + winWinIncome, finalSub, privilegeIncome, 0, winWinIncome, giftIncome];
+      } // else mgsIncome stays 0 if < 60
+    }
+
+    const total = partialTotal + mgsIncome + winWinIncome;
+    return [total, finalSub, privilegeIncome, mgsIncome, winWinIncome, giftIncome];
+  }
+
+  document.getElementById("incomeForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const wordCount = parseInt(document.getElementById("word_count").value);
+    const subscribers = parseInt(document.getElementById("subscribers").value);
+    const privilegeCoins = parseInt(document.getElementById("privilege_coins").value);
+    const giftCoins = parseInt(document.getElementById("gift_coins").value);
+    const mgs = document.getElementById("mgs").value;
+    const winwin = document.getElementById("winwin").value;
+
+    const [income, finalSub, privilegeIncome, mgsIncome, winWinIncome, giftIncome] =
+      calculateIncome(wordCount, subscribers, privilegeCoins, giftCoins, mgs, winwin);
+
+    document.getElementById("total_income").textContent = `$${income.toFixed(2)}`;
+    document.getElementById("res_word_count").textContent = wordCount;
+    document.getElementById("res_subscribers").textContent = subscribers;
+    document.getElementById("res_final_sub").textContent = finalSub.toFixed(2);
+    document.getElementById("res_privilege_income").textContent = privilegeIncome.toFixed(2);
+    document.getElementById("res_gift").textContent = giftIncome.toFixed(2);
+    document.getElementById("res_mgs").textContent = mgsIncome.toFixed(2);
+    document.getElementById("res_winwin").textContent = winWinIncome.toFixed(2);
+    document.getElementById("res_total").textContent = income.toFixed(2);
+
+    document.getElementById("result").style.display = "block";
+  });
+</script>
+</body>
+</html>
