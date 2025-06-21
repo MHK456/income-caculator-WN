@@ -34,25 +34,35 @@
             padding: 2rem;
             border-radius: 1rem;
             background-color: #292945;
-            animation: fadeInUp 1s ease-in-out;
-            border: 3px solid;
-            border-image: var(--border-rgb) 1;
-            border-image-slice: 1;
-            animation: borderAnimation 5s linear infinite, fadeInUp 1s ease-in-out;
+            border: 3px solid transparent;
+            background-image: 
+                linear-gradient(#292945, #292945), 
+                linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet);
+            background-origin: padding-box, border-box;
+            background-clip: padding-box, border-box;
+            background-size: 200% 200%;
+            background-position: 0% 50%, 0% 50%;
+            animation: animateBorder 10s linear infinite;
         }
+
+        @keyframes animateBorder {
+            0% { background-position: 0% 50%, 0% 50%; }
+            100% { background-position: 200% 50%, 200% 50%; }
+        }
+
 
         #income-calc input,
         #income-calc select,
         #income-calc button {
             width: 100%;
             padding: 0.75rem;
-            margin-top: 0.5rem;
+            margin-top: -0.5rem;
             margin-bottom: 1rem;
             font-size: 1rem;
             border: none;
             border-radius: 10px;
-            background: #fff;
-            color: #000;
+            background: #2235ad6d;
+            color: #fcf4f4;
             transition: all 0.3s ease;
         }
 
@@ -68,11 +78,14 @@
             font-weight: bold;
             cursor: pointer;
             border: none;
+            padding: 0.2rem 0.75rem; 
+            font-size: 1rem;
+            border-radius: 10px;
             transition: transform 0.3s ease;
         }
 
         #income-calc button:hover {
-            transform: scale(1.05);
+            transform: scale(1);
             background: linear-gradient(to right, #ff0057, #00d4ff);
         }
 
@@ -116,7 +129,7 @@
 </head>
 <body>
 <div id="page-wrapper">
-    <header id="header" class="alt">
+    <header id="header">
         <h1><a href="index.html">Moe's Income Calculator</a></h1>
     </header>
 
@@ -155,10 +168,13 @@
                     <option value="USD">USD - US Dollar</option>
                     <option value="AUD">AUD - Australian Dollar</option>
                     <option value="EUR">EUR - Euro</option>
-                    <option value="GBP">GBP - British Pound</option>
+                    <option value="CAD">CAD - Canadian Dollar</option>
                     <option value="JPY">JPY - Japanese Yen</option>
+                    <option value="SGD">Singapore Dollar (SGD)</option>
+                    <option value="PHP">Philippine Peso (PHP)</option>
                     <option value="INR">INR - Indian Rupee</option>
                     <option value="NGN">NGN - Nigerian Naira</option>
+                    <option value="CNY">Chinese Yuan (CNY)</option>
                 </select>
                 <button type="submit">Calculate</button>
             </form>
