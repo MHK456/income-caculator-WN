@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en-AU">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Webnovel Income Calculator</title>
+    <meta name="description"
+        content="Estimate your Webnovel income using your original inputs and formulas with a modern 3D UI.">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <!-- Chart.js first, then our app (app waits for window 'load' to be safe) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script type="module" src="assets/js/app.js"></script>
+</head>
+
+<body>
+    <canvas id="space" aria-hidden="true"></canvas>
+
+    <div class="wrap">
+        <header class="panel" role="banner">
+            <div class="logo" aria-hidden="true"></div>
+            <div>
+                <h1>Webnovel Income Calculator by Moe</h1>
+                <div class="tag">Happy calculating and hope you earn more than you imagined!</div>
+            </div>
+        </header>
+
+        <aside class="left panel" aria-label="Inputs">
+            <div class="group" data-tilt>
+                <h3>Inputs</h3>
+                <div class="row">
+                    <label for="word_count">Average Word Count</label>
+                    <input id="word_count" type="number" min="1000" max="2800" value="1600" required
+                        inputmode="numeric">
+                </div>
+                <div class="field-msg" id="wc_msg" role="alert" aria-live="polite" hidden></div>
+
+                <div class="row"><label for="subscribers">Total Subscriptions</label><input id="subscribers"
+                        type="number" min="0" value="0"></div>
+                <div class="row"><label for="privilege_coins">Total Privilege Coins</label><input id="privilege_coins"
+                        type="number" min="0" value="0"></div>
+                <div class="row"><label for="gift_coins">Gift Received (coins)</label><input id="gift_coins"
+                        type="number" min="0" value="0"></div>
+                <div class="row"><label for="mgs">MGS Bonus?</label>
+                    <select id="mgs">
+                        <option value="no" selected>No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                </div>
+                <div class="row"><label for="winwin">Win-Win Tier</label>
+                    <select id="winwin">
+                        <option value="" selected>None</option>
+                        <option value="tier1">Tier 1 ($50)</option>
+                        <option value="tier2">Tier 2 ($200)</option>
+                        <option value="tier3">Tier 3 ($400)</option>
+                    </select>
+                </div>
+                <div class="row"><label for="currency">Currency</label>
+                    <select id="currency">
+                        <option value="USD" selected>USD</option>
+                        <option value="AUD">AUD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="CAD">CAD</option>
+                        <option value="JPY">JPY</option>
+                        <option value="SGD">SGD</option>
+                        <option value="PHP">PHP</option>
+                        <option value="INR">INR</option>
+                        <option value="NGN">NGN</option>
+                        <option value="CNY">CNY</option>
+                    </select>
+                </div>
+                <button id="calcBtn" class="mag">Calculate</button>
+            </div>
+
+            <div class="group">
+                <h3>Notes</h3>
+                <p class="tag">Keep in mind these are just estimates! You should expect the final numbers to be off by
+                    5% to 20%. More if you are screwed by free coins subs.</p>
+            </div>
+        </aside>
+
+        <main class="right" aria-live="polite">
+            <!-- KPIs -->
+            <div class="cards">
+                <article class="card" data-tilt>
+                    <h4>Word Count</h4>
+                    <div class="value" id="res_word_count">–</div>
+                </article>
+                <article class="card" data-tilt>
+                    <h4>Subscriptions</h4>
+                    <div class="value" id="res_subscribers">–</div>
+                </article>
+                <article class="card total-card span-2" data-tilt>
+                    <h4>Total Estimated Income</h4>
+                    <div class="value good" id="res_total">$0.00</div>
+                    <div class="total-note">This is a standard estimate. Local rates differ.</div>
+                </article>
+            </div>
+
+            <!-- USD components (these are linked to the chart) -->
+            <section class="cards" style="margin-top:12px">
+                <article class="card" data-tilt data-key="Final Sub">
+                    <h4>Final Sub Income (USD)</h4>
+                    <div class="value" id="res_final_sub">$0.00</div>
+                </article>
+                <article class="card" data-tilt data-key="Privilege">
+                    <h4>Privilege Income (USD)</h4>
+                    <div class="value" id="res_privilege_income">$0.00</div>
+                </article>
+                <article class="card" data-tilt data-key="Gift">
+                    <h4>Gift Income (USD)</h4>
+                    <div class="value" id="res_gift">$0.00</div>
+                </article>
+                <article class="card" data-tilt>
+                    <h4>MGS Bonus (USD)</h4>
+                    <div class="value" id="res_mgs">$0.00</div>
+                </article>
+                <article class="card" data-tilt>
+                    <h4>Win-Win Bonus (USD)</h4>
+                    <div class="value" id="res_winwin">$0.00</div>
+                </article>
+                <article class="card" data-tilt>
+                    <h4>Subtotal (USD)</h4>
+                    <div class="value" id="res_subtotal">$0.00</div>
+                </article>
+            </section>
+
+            <section class="charts">
+                <div class="chart-wrap panel" data-tilt>
+                    <canvas id="breakdown" aria-label="Income breakdown chart" role="img"></canvas>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>
