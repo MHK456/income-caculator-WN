@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(chromium-cli --help)",
+      "Bash(where chrome.exe)",
+      "Bash(where msedge.exe)",
+      "Read(//c/Program Files/Google/Chrome/Application/**)",
+      "Read(//c/Program Files \\\\\\(x86\\\\\\)/Microsoft/Edge/Application/**)",
+      "Bash(\"C:/Program Files/Google/Chrome/Application/chrome.exe\" --headless=new --disable-gpu --no-sandbox --screenshot=\"C:/Users/moeht/AppData/Local/Temp/claude/c--xampp-htdocs-income-caculator-WN/61090d07-a947-438c-8263-37d42b257ade/scratchpad/screenshot_mobile.png\" --window-size=420,900 --virtual-time-budget=3000 \"file:///c:/xampp/htdocs/income-caculator-WN/index.html\")",
+      "Bash(\"C:/Program Files/Google/Chrome/Application/chrome.exe\" --headless=new --disable-gpu --no-sandbox --screenshot=\"C:/Users/moeht/AppData/Local/Temp/claude/c--xampp-htdocs-income-caculator-WN/61090d07-a947-438c-8263-37d42b257ade/scratchpad/screenshot_mobile2.png\" --window-size=420,1000 --virtual-time-budget=3000 \"file:///c:/xampp/htdocs/income-caculator-WN/index.html\")",
+      "Bash(sed 's/overflow-x: hidden;//' assets/css/styles.css)",
+      "Bash(cp \"C:/Users/moeht/AppData/Local/Temp/claude/c--xampp-htdocs-income-caculator-WN/61090d07-a947-438c-8263-37d42b257ade/scratchpad/test_states.html\" \"C:/Users/moeht/AppData/Local/Temp/claude/c--xampp-htdocs-income-caculator-WN/61090d07-a947-438c-8263-37d42b257ade/scratchpad/test_overflow.html\")",
+      "Bash(sed -i 's#file:///c:/xampp/htdocs/income-caculator-WN/assets/css/styles.css#styles_test.css#' test_overflow.html)",
+      "Bash(\"C:/Program Files/Google/Chrome/Application/chrome.exe\" --headless=new --disable-gpu --no-sandbox --screenshot=\"screenshot_overflow.png\" --window-size=420,1400 --virtual-time-budget=3000 \"file:///C:/Users/moeht/AppData/Local/Temp/claude/c--xampp-htdocs-income-caculator-WN/61090d07-a947-438c-8263-37d42b257ade/scratchpad/test_overflow.html\")"
+    ]
+  }
+}
